@@ -692,12 +692,13 @@ function ContractsGenerator({ clients, selectedClient, setSelectedClient, loadin
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Contrats et Documents Légaux</h3>
-        <p className="text-gray-600">
-          Générez des contrats légaux et documents officiels pour vos clients.
-        </p>
-      </div>
+  {/* En-tête */}
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900">Génération de Documents</h1>
+    <p className="text-gray-600">Générez des cartes Visa, rapports et relevés clients</p>
+  </div>
+
+  {/* Navigation des types de documents */} 
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">

@@ -117,6 +117,7 @@ function OverviewTab({ user }) {
   });
 
   const [recentTransactions, setRecentTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchDashboardData();
@@ -129,9 +130,19 @@ function OverviewTab({ user }) {
       const statsResponse = await fetch('http://localhost:5000/api/dashboard/stats', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
-        setStats(statsData);
+        // S'assurer que toutes les valeurs sont des nombres
+        const safeStats = {
+          totalBalance: Number(statsData.totalBalance) || 0,
+          pendingTransactions: Number(statsData.pendingTransactions) || 0,
+          activeLoans: Number(statsData.activeLoans) || 0,
+          totalClients: Number(statsData.totalClients) || 0,
+          todayTransactions: Number(statsData.todayTransactions) || 0,
+          monthlyRevenue: Number(statsData.monthlyRevenue) || 0
+        };
+        setStats(safeStats);
       }
 
       // Récupérer les transactions récentes
@@ -140,12 +151,34 @@ function OverviewTab({ user }) {
       });
       if (transactionsResponse.ok) {
         const transactionsData = await transactionsResponse.json();
-        setRecentTransactions(transactionsData);
+        // S'assurer que c'est un tableau
+        setRecentTransactions(Array.isArray(transactionsData) ? transactionsData : []);
       }
     } catch (error) {
       console.error('Erreur:', error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl p-6 text-white animate-pulse">
+          <div className="h-8 bg-blue-500 rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-blue-400 rounded w-1/2"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="bg-gray-100 rounded-2xl p-6 animate-pulse">
+              <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+              <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

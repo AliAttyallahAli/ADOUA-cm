@@ -12,12 +12,10 @@ const moment = require('moment');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = 'votre_secret_jwt';
-const documentRoutes = require('./routes/documents');
 
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-app.use('/api', documentRoutes);
 
 // Initialisation de la base de données
 const db = new sqlite3.Database('./adouas_mc.db');
@@ -159,6 +157,71 @@ app.post('/api/login', (req, res) => {
         photo: user.photo
       }
     });
+  });
+});
+// Route pour les statistiques dashboard
+app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
+  // Compter les transactions en attente
+  db.get('SELECT COUNT(*) as count FROM transactions WHERE status = "pending"', (err, pendingResult) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Compter les prêts actifs
+    db.get('SELECT COUNT(*) as count FROM loans WHERE status = "active"', (err, loansResult) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      // Compter les clients totaux
+      db.get('SELECT COUNT(*) as count FROM clients', (err, clientsResult) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+
+        // Transactions d'aujourd'hui
+        const today = new Date().toISOString().split('T')[0];
+        db.get('SELECT COUNT(*) as count FROM transactions WHERE DATE(created_at) = ?', [today], (err, todayResult) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+
+          const stats = {
+            totalBalance: 1000000000,
+            pendingTransactions: pendingResult.count,
+            activeLoans: loansResult.count,
+            totalClients: clientsResult.count,
+            todayTransactions: todayResult.count,
+            monthlyRevenue: 2500000
+          };
+
+          // S'assurer que toutes les valeurs sont des nombres
+          Object.keys(stats).forEach(key => {
+            if (typeof stats[key] === 'object') {
+              stats[key] = 0;
+            }
+          });
+
+          res.json(stats);
+        });
+      });
+    });
+  });
+});
+// Importer les routes documents
+const documentRoutes = require('./routes/documents');
+app.use('/api', documentRoutes);
+
+// Route test pour vérifier que les documents fonctionnent
+app.get('/api/test-documents', (req, res) => {
+  res.json({ 
+    message: 'Module documents actif',
+    endpoints: [
+      'GET /api/generate-card/:clientId',
+      'POST /api/generate-report',
+      'POST /api/generate-statement/:clientId',
+      'POST /api/generate-contract/:clientId'
+    ]
   });
 });
 
