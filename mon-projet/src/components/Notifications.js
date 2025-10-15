@@ -1,101 +1,202 @@
 import { useState, useEffect } from 'react';
 
-export default function Notifications() {
-  const [notifications, setNotifications] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+export default function LoanManagement({ user }) {
+  const [loans, setLoans] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
 
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Actualiser toutes les 30 secondes
-    return () => clearInterval(interval);
+    fetchLoans();
   }, []);
 
-  const fetchNotifications = async () => {
+  const fetchLoans = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/notifications', {
+      const response = await fetch('http://localhost:5000/api/loans', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
-      setNotifications(data);
+      setLoans(data);
     } catch (error) {
       console.error('Erreur:', error);
     }
   };
 
-  const markAsRead = async (notificationId) => {
-    const token = localStorage.getItem('token');
-    try {
-      await fetch(`http://localhost:5000/api/notifications/${notificationId}/read`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      setNotifications(notifications.filter(n => n.id !== notificationId));
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
+  const totalStats = {
+    totalAmount: loans.reduce((sum, loan) => sum + parseFloat(loan.amount), 0),
+    totalPaid: loans.reduce((sum, loan) => sum + parseFloat(loan.paid_amount), 0),
+    totalRemaining: loans.reduce((sum, loan) => sum + parseFloat(loan.remaining_amount), 0),
+    activeLoans: loans.filter(loan => loan.status === 'active').length
   };
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM10.24 8.56a5.97 5.97 0 01-4.66-7.5 1 1 0 00-.68-1.21 1 1 0 00-1.21.68A7.97 7.97 0 008 12.5v.5H5a1 1 0 000 2h10a1 1 0 000-2h-3v-.5c0-1.64-.63-3.2-1.76-4.44z" />
-        </svg>
-        {notifications.length > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-            {notifications.length}
-          </span>
+    <div className="space-y-6">
+      {/* En-tête et statistiques */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Gestion des Prêts</h1>
+          <p className="text-gray-600">{loans.length} prêts au total</p>
+        </div>
+        
+        {(user.role === 'admin' || user.role === 'chef_operation') && (
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2"
+          >
+            <span>+</span>
+            <span>Nouveau Prêt</span>
+          </button>
         )}
-      </button>
+      </div>
 
-      {showDropdown && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-50">
-          <div className="py-2">
-            <div className="px-4 py-2 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Notifications</h3>
-            </div>
-            
-            {notifications.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-gray-500">
-                Aucune nouvelle notification
-              </div>
-            ) : (
-              notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
-                    notification.type === 'danger' ? 'bg-red-50' :
-                    notification.type === 'warning' ? 'bg-yellow-50' : 'bg-blue-50'
-                  }`}
-                  onClick={() => markAsRead(notification.id)}
-                >
-                  <p className="text-sm font-medium text-gray-900">
-                    {notification.message}
-                  </p>
-                  <button className="mt-1 text-xs text-blue-600 hover:text-blue-800">
-                    Voir les détails
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-          
-          {notifications.length > 0 && (
-            <div className="px-4 py-2 bg-gray-50">
-              <button
-                onClick={() => setNotifications([])}
-                className="text-sm text-gray-600 hover:text-gray-900"
-              >
-                Tout marquer comme lu
-              </button>
-            </div>
-          )}
+      {/* Cartes de statistiques */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <StatCard
+          title="Montant Total"
+          value={`${totalStats.totalAmount.toLocaleString()} XOF`}
+          icon="💰"
+          color="blue"
+        />
+        <StatCard
+          title="Total Payé"
+          value={`${totalStats.totalPaid.toLocaleString()} XOF`}
+          icon="✅"
+          color="green"
+        />
+        <StatCard
+          title="Total Restant"
+          value={`${totalStats.totalRemaining.toLocaleString()} XOF`}
+          icon="⏳"
+          color="orange"
+        />
+        <StatCard
+          title="Prêts Actifs"
+          value={totalStats.activeLoans.toString()}
+          icon="📊"
+          color="purple"
+        />
+      </div>
+
+      {/* Tableau des prêts */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Client
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Montant
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Taux
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payé
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Reste
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Statut
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {loans.map((loan) => (
+                <LoanRow 
+                  key={loan.id} 
+                  loan={loan} 
+                  onView={() => setSelectedLoan(loan)}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {loans.length === 0 && (
+        <div className="text-center py-12 bg-white rounded-2xl border-2 border-dashed border-gray-300">
+          <div className="text-6xl mb-4">💰</div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun prêt enregistré</h3>
+          <p className="text-gray-500 mb-4">Commencez par créer votre premier prêt</p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Créer un prêt
+          </button>
         </div>
       )}
+    </div>
+  );
+}
+
+function LoanRow({ loan, onView }) {
+  const progress = (loan.paid_amount / loan.total_amount) * 100;
+
+  return (
+    <tr className="hover:bg-gray-50 transition-colors">
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div>
+          <div className="font-medium text-gray-900">{loan.client_name}</div>
+          <div className="text-sm text-gray-500 font-mono">{loan.wallet_address}</div>
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+        {parseFloat(loan.amount).toLocaleString()} XOF
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        {loan.interest_rate}%
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">
+        {parseFloat(loan.paid_amount).toLocaleString()} XOF
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-semibold">
+        {parseFloat(loan.remaining_amount).toLocaleString()} XOF
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+          loan.status === 'active' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-gray-100 text-gray-800'
+        }`}>
+          {loan.status === 'active' ? 'Actif' : 'Terminé'}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        <button
+          onClick={onView}
+          className="text-blue-600 hover:text-blue-900 font-medium"
+        >
+          Détails
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+function StatCard({ title, value, icon, color }) {
+  const colorClasses = {
+    blue: 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200',
+    green: 'bg-gradient-to-br from-green-50 to-green-100 border-green-200',
+    orange: 'bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200',
+    purple: 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200'
+  };
+
+  return (
+    <div className={`${colorClasses[color]} rounded-2xl border-2 p-6 transition-transform hover:scale-105 duration-200`}>
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+          <p className="text-2xl font-bold text-gray-900">{value}</p>
+        </div>
+        <div className="text-3xl">{icon}</div>
+      </div>
     </div>
   );
 }

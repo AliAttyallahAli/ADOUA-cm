@@ -12,10 +12,12 @@ const moment = require('moment');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = 'votre_secret_jwt';
+const documentRoutes = require('./routes/documents');
 
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use('/api', documentRoutes);
 
 // Initialisation de la base de données
 const db = new sqlite3.Database('./adouas_mc.db');
@@ -1149,6 +1151,31 @@ app.get('/api/transactions/report/pdf', authenticateToken, async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: 'Erreur lors de la génération du PDF' });
     }
+  });
+});
+app.get('/api/dashboard/stats', authenticateToken, (req, res) => {
+  const stats = {
+    totalBalance: 1000000000,
+    pendingTransactions: 12,
+    activeLoans: 45,
+    totalClients: 128,
+    todayTransactions: 8,
+    monthlyRevenue: 2500000
+  };
+  res.json(stats);
+});
+
+// Route pour les wallets utilisateur
+app.get('/api/user/wallets', authenticateToken, (req, res) => {
+  db.all(`
+    SELECT w.* 
+    FROM wallets w 
+    WHERE w.user_id = ? OR w.type = 'main'
+  `, [req.user.id], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
   });
 });
 
