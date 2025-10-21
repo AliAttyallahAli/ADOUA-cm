@@ -1,20 +1,50 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '/.netlify/functions/api'
-  : 'http://localhost:9000/.netlify/functions/api';
+// Configuration des URLs API selon l'environnement
+const getApiBaseUrl = () => {
+  // En développement local
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:5000/api';
+  }
+  // En production sur Netlify
+  return '/.netlify/functions/api';
+};
 
 export const apiClient = {
-  async get(url) {
-    const response = await fetch(`${API_BASE_URL}${url}`);
+  async get(endpoint) {
+    const response = await fetch(`${getApiBaseUrl()}${endpoint}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     return response.json();
   },
 
-  async post(url, data) {
-    const response = await fetch(`${API_BASE_URL}${url}`, {
+  async post(endpoint, data) {
+    const response = await fetch(`${getApiBaseUrl()}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  },
+
+  async put(endpoint, data) {
+    const response = await fetch(`${getApiBaseUrl()}${endpoint}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+
+  async delete(endpoint) {
+    const response = await fetch(`${getApiBaseUrl()}${endpoint}`, {
+      method: 'DELETE',
     });
     return response.json();
   }

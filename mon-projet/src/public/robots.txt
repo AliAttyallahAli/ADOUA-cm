@@ -1,0 +1,7 @@
+# Dans le dossier public
+cat > frontend/public/robots.txt << 'EOF'
+User-agent: *
+Allow: /
+
+Sitemap: https://votresite.netlify.app/sitemap.xml
+EOF
