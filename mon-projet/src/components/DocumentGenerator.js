@@ -328,7 +328,7 @@ function VisaCardGenerator({ clients, selectedClient, setSelectedClient, onGener
               <div className="text-right">
                 <div className="text-blue-200 text-sm mb-2">QR Code</div>
                 <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center">
-                  <div className="text-2xl">📱</div>
+                  <div className="text-2xl">QR</div>
                 </div>
               </div>
             </div>

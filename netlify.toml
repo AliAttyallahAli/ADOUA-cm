@@ -1,0 +1,27 @@
+[build]
+  command = "cd frontend && npm run build"
+  publish = "frontend/out"
+
+[functions]
+  directory = "functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  command = "cd frontend && npm run dev"
+  targetPort = 3000
+  publish = "frontend/out"
+
+[build]
+  command = "cd frontend && npm run build"
+  targetPort = 3000
+  publish = "frontend/out"

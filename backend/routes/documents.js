@@ -33,7 +33,7 @@ router.get('/generate-card/:clientId', async (req, res) => {
 
         const doc = new PDFDocument({
           layout: 'landscape',
-          size: [600, 380],
+          size: [1200, 900],
           margins: { top: 0, bottom: 0, left: 0, right: 0 }
         });
 
@@ -120,7 +120,7 @@ router.get('/generate-card/:clientId', async (req, res) => {
              .font('Helvetica-Bold')
              .text(`${createdDate.getMonth() + 1}/${createdDate.getFullYear()}`, 120, 285);
 
-          // Solde
+          /*Solde
           doc.fillColor('#666')
              .fontSize(10)
              .text('Solde Actuel', 40, 310);
@@ -129,7 +129,7 @@ router.get('/generate-card/:clientId', async (req, res) => {
              .fontSize(14)
              .font('Helvetica-Bold')
              .text(`${parseFloat(wallet?.balance || 0).toLocaleString('fr-FR')} XOF`, 40, 325);
-
+            */
           // QR Code
           doc.fillColor('#1a237e')
              .fontSize(10)
