@@ -15,7 +15,7 @@ export default function ClientDetails({ client, onClose, onUpdate, user }) {
     
     // Récupérer les prêts du client
     try {
-      const loansResponse = await fetch(`http://localhost:5000/api/clients/${client.id}/loans`, {
+      const loansResponse = await fetch(`/api/clients/${client.id}/loans`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (loansResponse.ok) {
@@ -28,7 +28,7 @@ export default function ClientDetails({ client, onClose, onUpdate, user }) {
 
     // Récupérer les transactions du client
     try {
-      const transactionsResponse = await fetch(`http://localhost:5000/api/clients/${client.id}/transactions`, {
+      const transactionsResponse = await fetch(`/api/clients/${client.id}/transactions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (transactionsResponse.ok) {
@@ -41,7 +41,7 @@ export default function ClientDetails({ client, onClose, onUpdate, user }) {
 
     // Récupérer le solde du wallet
     try {
-      const walletResponse = await fetch(`http://localhost:5000/api/wallets/${client.wallet_address}`, {
+      const walletResponse = await fetch(`/api/wallets/${client.wallet_address}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (walletResponse.ok) {
@@ -56,7 +56,7 @@ export default function ClientDetails({ client, onClose, onUpdate, user }) {
   const generateVisaCard = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-card/${client.id}`, {
+      const response = await fetch(`/api/generate-card/${client.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

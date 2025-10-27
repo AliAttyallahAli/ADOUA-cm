@@ -27,7 +27,7 @@ export default function HomePage() {
 
   const checkAPIStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/health', {
+      const response = await fetch('/api/health', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function HomePage() {
 
     // Test CORS avant le login
     try {
-      const testResponse = await fetch('http://localhost:5000/api/test-cors', {
+      const testResponse = await fetch('/api/test-cors', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

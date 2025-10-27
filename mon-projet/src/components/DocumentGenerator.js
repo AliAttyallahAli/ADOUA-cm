@@ -18,7 +18,7 @@ export default function DocumentGenerator({ user }) {
   const fetchClients = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/clients', {
+      const response = await fetch('/api/clients', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -37,7 +37,7 @@ export default function DocumentGenerator({ user }) {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-card/${selectedClient}`, {
+      const response = await fetch(`/api/generate-card/${selectedClient}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -71,7 +71,7 @@ export default function DocumentGenerator({ user }) {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/generate-report', {
+      const response = await fetch('/api/generate-report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export default function DocumentGenerator({ user }) {
     setLoading(true);
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-statement/${selectedClient}`, {
+      const response = await fetch(`/api/generate-statement/${selectedClient}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -637,7 +637,7 @@ function ContractsGenerator({ clients, selectedClient, setSelectedClient, loadin
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-contract/${selectedClient}`, {
+      const response = await fetch(`/api/generate-contract/${selectedClient}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

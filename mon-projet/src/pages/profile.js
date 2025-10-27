@@ -32,7 +32,7 @@ export default function Profile() {
   const fetchUserProfile = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/profile', {
+      const response = await fetch('/api/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -52,7 +52,7 @@ export default function Profile() {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:5000/api/profile', {
+      const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function Profile() {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:5000/api/change-password', {
+      const response = await fetch('/api/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export default function Profile() {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:5000/api/upload-photo', {
+      const response = await fetch('/api/upload-photo', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

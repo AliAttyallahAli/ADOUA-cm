@@ -17,7 +17,7 @@ export default function TransactionDetail() {
   const fetchTransaction = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+      const response = await fetch(`/api/transactions/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

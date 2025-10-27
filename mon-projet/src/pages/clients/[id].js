@@ -23,21 +23,21 @@ export default function ClientDetail() {
     
     try {
       // Récupérer les données du client
-      const clientResponse = await fetch(`http://localhost:5000/api/clients/${id}`, {
+      const clientResponse = await fetch(`/api/clients/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const clientData = await clientResponse.json();
       setClient(clientData);
 
       // Récupérer les transactions du client
-      const transactionsResponse = await fetch(`http://localhost:5000/api/clients/${id}/transactions`, {
+      const transactionsResponse = await fetch(`/api/clients/${id}/transactions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const transactionsData = await transactionsResponse.json();
       setTransactions(transactionsData);
 
       // Récupérer les prêts du client
-      const loansResponse = await fetch(`http://localhost:5000/api/clients/${id}/loans`, {
+      const loansResponse = await fetch(`/api/clients/${id}/loans`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const loansData = await loansResponse.json();
@@ -53,7 +53,7 @@ export default function ClientDetail() {
   const generateVisaCard = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-card/${id}`, {
+      const response = await fetch(`/api/generate-card/${id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -671,7 +671,7 @@ function LoansTab({ loans, clientId }) {
   const handleRepayment = async (loanId, amount) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/loans/${loanId}/repayment`, {
+      const response = await fetch(`/api/loans/${loanId}/repayment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -834,7 +834,7 @@ function DocumentsTab({ client }) {
   const generateVisaCard = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/generate-card/${client.id}`, {
+      const response = await fetch(`/api/generate-card/${client.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

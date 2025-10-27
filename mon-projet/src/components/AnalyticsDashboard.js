@@ -11,7 +11,7 @@ export default function AnalyticsDashboard() {
   const fetchAnalytics = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/analytics/transactions?period=${period}`, {
+      const response = await fetch(`/api/analytics/transactions?period=${period}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();

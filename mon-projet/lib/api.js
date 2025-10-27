@@ -2,7 +2,7 @@
 const getApiBaseUrl = () => {
   // En développement local
   if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:5000/api';
+    return '/api';
   }
   // En production sur Netlify
   return '/.netlify/functions/api';

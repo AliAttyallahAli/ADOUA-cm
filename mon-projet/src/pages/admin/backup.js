@@ -12,7 +12,7 @@ export default function Backup() {
     
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/backup', {
+      const response = await fetch('/api/admin/backup', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

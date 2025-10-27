@@ -19,7 +19,7 @@ export function useTransactions(filters = {}) {
     });
 
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions?${queryParams}`, {
+      const response = await fetch(`/api/transactions?${queryParams}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -40,7 +40,7 @@ export function useTransactions(filters = {}) {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:5000/api/transactions', {
+      const response = await fetch('/api/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

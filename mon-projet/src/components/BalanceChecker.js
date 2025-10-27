@@ -13,7 +13,7 @@ export default function BalanceChecker() {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch(`http://localhost:5000/api/wallet/balance/${walletAddress}`, {
+      const response = await fetch(`/api/wallet/balance/${walletAddress}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

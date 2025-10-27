@@ -127,7 +127,7 @@ function OverviewTab({ user }) {
     const token = localStorage.getItem('token');
     try {
       // Récupérer les statistiques
-      const statsResponse = await fetch('http://localhost:5000/api/dashboard/stats', {
+      const statsResponse = await fetch('/api/dashboard/stats', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -146,7 +146,7 @@ function OverviewTab({ user }) {
       }
 
       // Récupérer les transactions récentes
-      const transactionsResponse = await fetch('http://localhost:5000/api/transactions?limit=5', {
+      const transactionsResponse = await fetch('/api/transactions?limit=5', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (transactionsResponse.ok) {
@@ -294,7 +294,7 @@ function TransactionsTab({ user }) {
     });
 
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions?${queryParams}`, {
+      const response = await fetch(`/api/transactions?${queryParams}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -452,7 +452,7 @@ function TransactionRow({ transaction, user, onValidate }) {
   const validateTransaction = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/transactions/${transaction.id}/validate`, {
+      const response = await fetch(`/api/transactions/${transaction.id}/validate`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });

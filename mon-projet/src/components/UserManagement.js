@@ -12,7 +12,7 @@ export default function UserManagement({ user }) {
   const fetchUsers = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch('/api/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -27,7 +27,7 @@ export default function UserManagement({ user }) {
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+      const response = await fetch(`/api/users/${userId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -158,8 +158,8 @@ function UserForm({ user, onClose, onSuccess }) {
     const token = localStorage.getItem('token');
     
     const url = isEditing 
-      ? `http://localhost:5000/api/users/${user.id}`
-      : 'http://localhost:5000/api/users';
+      ? `/api/users/${user.id}`
+      : '/api/users';
     
     const method = isEditing ? 'PUT' : 'POST';
 

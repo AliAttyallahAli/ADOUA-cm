@@ -14,7 +14,7 @@ export default function LoanManagement({ user }) {
   const fetchLoans = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/loans', {
+      const response = await fetch('/api/loans', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -27,7 +27,7 @@ export default function LoanManagement({ user }) {
   const fetchClients = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/clients', {
+      const response = await fetch('/api/clients', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -40,7 +40,7 @@ export default function LoanManagement({ user }) {
   const handleRepayment = async (loanId, amount) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/loans/${loanId}/repayment`, {
+      const response = await fetch(`/api/loans/${loanId}/repayment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ function LoanForm({ clients, onClose, onSuccess }) {
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:5000/api/loans', {
+      const response = await fetch('/api/loans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

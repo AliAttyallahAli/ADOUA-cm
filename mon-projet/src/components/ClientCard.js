@@ -12,7 +12,7 @@ export default function ClientCard({ client }) {
   const handleGenerateCard = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/documents/generate-card/${client.id}`, {
+      const response = await fetch(`/api/documents/generate-card/${client.id}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       

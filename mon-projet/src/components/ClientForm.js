@@ -16,7 +16,7 @@ export default function ClientForm({ onClose, onSuccess }) {
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/clients', {
+      const response = await fetch('/api/clients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

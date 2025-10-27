@@ -9,7 +9,7 @@ export default function TestDocuments() {
     setMessage('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/test-documents');
+      const response = await fetch('/api/test-documents');
       const data = await response.json();
       setMessage(`✅ ${data.message}\nEndpoints disponibles:\n${data.endpoints.join('\n')}`);
     } catch (error) {

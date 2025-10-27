@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     if (token && userData) {
       try {
         // Vérifier la validité du token
-        const response = await fetch('http://localhost:5000/api/auth/verify', {
+        const response = await fetch('/api/auth/verify', {
           method: 'GET',
           headers: { 
             'Authorization': `Bearer ${token}`,
@@ -43,9 +43,9 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      console.log('Tentative de connexion vers:', 'http://localhost:5000/api/login');
+      console.log('Tentative de connexion vers:', '/api/login');
       
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

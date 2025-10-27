@@ -21,7 +21,7 @@ export default function TransactionForm({ onClose, onSuccess }) {
   const fetchClients = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/clients', {
+      const response = await fetch('/api/clients', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -34,7 +34,7 @@ export default function TransactionForm({ onClose, onSuccess }) {
   const fetchUserWallets = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/user/wallets', {
+      const response = await fetch('/api/user/wallets', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -50,7 +50,7 @@ export default function TransactionForm({ onClose, onSuccess }) {
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/transactions', {
+      const response = await fetch('/api/transactions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
