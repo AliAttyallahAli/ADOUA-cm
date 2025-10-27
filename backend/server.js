@@ -16,7 +16,7 @@ const JWT_SECRET = 'votre_secret_jwt';
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-
+app.use(express.static(path.join(__dirname, 'public')));
 // Initialisation de la base de données
 const db = new sqlite3.Database('./adouas_mc.db');
 
